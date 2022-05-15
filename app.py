@@ -11,7 +11,7 @@ import av
 from keras.models import load_model
 from PIL import Image
 from keras.preprocessing import image
-from streamlit_webrtc import webrtc_streamer, RTCConfiguration
+from streamlit_webrtc import webrtc_streamer
 
 # Loading Model
 model = load_model("cnnmodel.h5")
@@ -51,15 +51,7 @@ class VideoProcessor:
 			cv2.putText(frame, labels_dict[label1], (x, y-10),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),2)
 		return av.VideoFrame.from_ndarray(frm, format='bgr24')
 
-webrtc_streamer(key="key", video_processor_factory=VideoProcessor,
-				rtc_configuration=RTCConfiguration(
-					{"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
-					)
-	)
-
-
-
-
+webrtc_streamer(key="key", video_processor_factory=VideoProcessor)
 
 
 # Functioning Camera Button

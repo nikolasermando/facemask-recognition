@@ -19,6 +19,11 @@ model = load_model("cnnmodel.h5")
 # Title
 st.markdown("<h1 style='text-align: center; '>Face Mask Recognition</h2>", unsafe_allow_html=True)
 
+# label prediction and color
+labels_dict={0:'Mask',1:'Without Mask'}
+color_dict={0:(0,0,255),1:(0,255,0)}
+
+
 
 class VideoProcessor:
 	def recv(self, frame):
@@ -66,9 +71,6 @@ webrtc_streamer(key="key", video_processor_factory=VideoProcessor,
 #classifier = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 #size = 4
 
-# label prediction and color
-#labels_dict={0:'Mask',1:'Without Mask'}
-#color_dict={0:(0,0,255),1:(0,255,0)}
 
 # Frame processing
 #while run:

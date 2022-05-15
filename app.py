@@ -64,7 +64,7 @@ try:
     # active camera
     camera.release()
 except ValueError:
-    st.write("Currently Streamlit Cloud doesn't support live cam yet. Please try model with upload file instead. :)")
+    st.error("Currently Streamlit Cloud doesn't support live cam yet. Please try model with upload file instead. :)")
     
 st.markdown("<h4 style='text-align: center; '>or</h2>", unsafe_allow_html=True)
 

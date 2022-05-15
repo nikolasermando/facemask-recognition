@@ -28,7 +28,22 @@ class VideoProcessor:
 
 		for x,y,w,h in faces:
 			cv2.rectangle(frm, (x,y), (x+w, y+h), (0,255,0), 3)
+			face_img = frame[y:y+h, x:x+w]
+			resized=cv2.resize(face_img,(64,64))
+			normalized=resized/255.0
+			reshaped=np.reshape(normalized,(1,64,64,3))
+			reshaped = np.vstack([reshaped])
+			result=model.predict(reshaped)
 
+			label=result[0][0]
+			if label > 0.5:
+			    label1 = 1
+			else:
+			    label1 = 0
+
+			cv2.rectangle(frame,(x,y),(x+w,y+h),color_dict[label1],2)
+			cv2.rectangle(frame,(x,y-40),(x+w,y),color_dict[label1],-1)
+			cv2.putText(frame, labels_dict[label1], (x, y-10),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),2
 		return av.VideoFrame.from_ndarray(frm, format='bgr24')
 
 webrtc_streamer(key="key", video_processor_factory=VideoProcessor,

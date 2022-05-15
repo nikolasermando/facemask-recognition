@@ -11,7 +11,7 @@ import av
 from keras.models import load_model
 from PIL import Image
 from keras.preprocessing import image
-from streamlit_webrtc import webrtc_streamer
+from streamlit_webrtc import webrtc_streamer, RTCConfiguration
 
 # Loading Model
 model = load_model("cnnmodel.h5")

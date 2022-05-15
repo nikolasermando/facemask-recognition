@@ -43,8 +43,8 @@ class VideoProcessor:
 
 			cv2.rectangle(frame,(x,y),(x+w,y+h),color_dict[label1],2)
 			cv2.rectangle(frame,(x,y-40),(x+w,y),color_dict[label1],-1)
-			cv2.putText(frame, labels_dict[label1], (x, y-10),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),2
-	return av.VideoFrame.from_ndarray(frm, format='bgr24')
+			cv2.putText(frame, labels_dict[label1], (x, y-10),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),2)
+		return av.VideoFrame.from_ndarray(frm, format='bgr24')
 
 webrtc_streamer(key="key", video_processor_factory=VideoProcessor,
 				rtc_configuration=RTCConfiguration(

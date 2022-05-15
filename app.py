@@ -19,51 +19,74 @@ model = load_model("cnnmodel.h5")
 # Title
 st.markdown("<h1 style='text-align: center; '>Face Mask Recognition</h2>", unsafe_allow_html=True)
 
+
+class VideoProcessor:
+	def recv(self, frame):
+		frm = frame.to_ndarray(format="bgr24")
+
+		faces = cascade.detectMultiScale(cv2.cvtColor(frm, cv2.COLOR_BGR2GRAY), 1.1, 3)
+
+		for x,y,w,h in faces:
+			cv2.rectangle(frm, (x,y), (x+w, y+h), (0,255,0), 3)
+
+		return av.VideoFrame.from_ndarray(frm, format='bgr24')
+
+webrtc_streamer(key="key", video_processor_factory=VideoProcessor,
+				rtc_configuration=RTCConfiguration(
+					{"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
+					)
+	)
+
+
+
+
+
+
 # Functioning Camera Button
-run = st.checkbox('Use Camera')
-FRAME_WINDOW = st.image([])
+#run = st.checkbox('Use Camera')
+#FRAME_WINDOW = st.image([])
 
 # Active cv2 camera and cascade frontalface classifier
-camera = cv2.VideoCapture(0)
-classifier = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-size = 4
+#camera = cv2.VideoCapture(0)
+#classifier = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+#size = 4
 
 # label prediction and color
-labels_dict={0:'Mask',1:'Without Mask'}
-color_dict={0:(0,0,255),1:(0,255,0)}
+#labels_dict={0:'Mask',1:'Without Mask'}
+#color_dict={0:(0,0,255),1:(0,255,0)}
 
 # Frame processing
-while run:
-    rval, frame = camera.read()
-    frame = cv2.flip(frame,1,1)
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    mini = cv2.resize(frame, (frame.shape[1] // size, frame.shape[0] // size))
-    faces = classifier.detectMultiScale(mini)
-    
-    for f in faces:
-        (x, y, w, h) = [v * size for v in f]
-        face_img = frame[y:y+h, x:x+w]
-        resized=cv2.resize(face_img,(64,64))
-        normalized=resized/255.0
-        reshaped=np.reshape(normalized,(1,64,64,3))
-        reshaped = np.vstack([reshaped])
-        result=model.predict(reshaped)
-        
-        label=result[0][0]
-        if label > 0.5:
-            label1 = 1
-        else:
-            label1 = 0
-      
-        cv2.rectangle(frame,(x,y),(x+w,y+h),color_dict[label1],2)
-        cv2.rectangle(frame,(x,y-40),(x+w,y),color_dict[label1],-1)
-        cv2.putText(frame, labels_dict[label1], (x, y-10),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),2)
-    FRAME_WINDOW.image(frame)
-    if run==False:
-        break
-    
-# active camera
-camera.release()
+#while run:
+#    rval, frame = camera.read()
+#    frame = cv2.flip(frame,1,1)
+#    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+#    mini = cv2.resize(frame, (frame.shape[1] // size, frame.shape[0] // size))
+#    faces = classifier.detectMultiScale(mini)
+#    
+#    for f in faces:
+#        (x, y, w, h) = [v * size for v in f]
+#        face_img = frame[y:y+h, x:x+w]
+#        resized=cv2.resize(face_img,(64,64))
+#        normalized=resized/255.0
+#        reshaped=np.reshape(normalized,(1,64,64,3))
+#        reshaped = np.vstack([reshaped])
+#        result=model.predict(reshaped)
+#        
+#        label=result[0][0]
+#        if label > 0.5:
+#            label1 = 1
+#        else:
+#            label1 = 0
+#      
+#        cv2.rectangle(frame,(x,y),(x+w,y+h),color_dict[label1],2)
+#        cv2.rectangle(frame,(x,y-40),(x+w,y),color_dict[label1],-1)
+#        cv2.putText(frame, labels_dict[label1], (x, y-10),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),2)
+#    FRAME_WINDOW.image(frame)
+#    if run==False:
+#        break
+#    
+## active camera
+#camera.release()
 
 st.markdown("<h4 style='text-align: center; '>or</h2>", unsafe_allow_html=True)
 
